@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>LogSearch — Log Explorer</title>
+  <script src="https://cdn.tailwindcss.com" defer></script>
+  <style>
+    :root{--ink:#182c2c;--muted:#647574;--teal:#086b61;--line:#dce4df;--paper:#f5f7f3;--white:#fff;--mono:ui-monospace,SFMono-Regular,Consolas,monospace}
+    *{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--paper);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px;line-height:1.5}button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{opacity:.42;cursor:not-allowed}button,input,select,textarea{outline-offset:4px}a{color:var(--teal)}[hidden]{display:none!important}svg{flex:none;width:20px;height:20px}button svg{width:16px;height:16px}
+    .shell{display:grid;grid-template-columns:222px 1fr;min-height:100vh}.sidebar{background:#112f30;color:#e7f1e9;padding:31px 22px;display:flex;flex-direction:column;gap:40px}.brand{display:flex;gap:10px;align-items:center;font-size:19px;letter-spacing:-.5px;font-weight:750}.brand-mark{display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:#c4efb8;color:#123e35}.brand-mark svg{width:22px;height:22px}.eyebrow{font-size:10px;letter-spacing:1.7px;font-weight:750;text-transform:uppercase;color:var(--muted)}.sidebar .eyebrow{color:#91b0aa}.active-nav{display:flex;gap:11px;align-items:center;background:#224344;border:1px solid #3a5c58;padding:12px;border-radius:8px;margin-top:13px}.steps{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:20px;color:#b5cac3;font-size:12px}.steps li{display:flex;gap:11px;align-items:center}.step-number{width:23px;height:23px;border:1px solid #4a6964;border-radius:50%;display:grid;place-items:center;font-size:10px;color:#d0e8c9}.sidebar-footer{margin-top:auto;color:#9cbbb1;font-size:12px;border-top:1px solid #355351;padding-top:22px}.sidebar-footer p{margin:8px 0}.tiny-label{display:flex;align-items:center;gap:7px}.dot{width:7px;height:7px;border-radius:50%;background:#b9e8ac;display:inline-block}
+    .main{min-width:0}.topbar{height:73px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;padding:0 40px;background:#ffffff80;font-size:12px;color:var(--muted)}.breadcrumb{display:flex;gap:10px;align-items:center}.breadcrumb strong{font-weight:600;color:var(--ink)}.private-badge{display:flex;align-items:center;gap:7px;font-size:11px}.private-badge svg{width:15px;height:15px;color:var(--teal)}.workspace{max-width:1440px;margin:auto;padding:34px 40px 28px}.page-heading{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:26px}.page-heading h1{font-size:30px;line-height:1.22;letter-spacing:-1px;font-weight:650;margin:6px 0 9px}.page-heading p{margin:0;color:var(--muted);font-size:13px}.button{border:1px solid #cbd8d0;border-radius:7px;padding:9px 13px;display:inline-flex;gap:8px;align-items:center;justify-content:center;background:white;color:var(--ink);font-size:12px;font-weight:600;white-space:nowrap;text-decoration:none}.button:hover:enabled{background:#edf3ed}.button.primary{color:white;background:var(--teal);border-color:var(--teal)}.button.primary:hover:enabled{background:#07564e}.button.quiet{border:0;background:transparent;color:var(--muted);padding:7px}.button.quiet:hover:enabled{background:#edf3ed}.card{background:white;border:1px solid var(--line);border-radius:11px;box-shadow:0 2px 3px #1c3b2c03}.input-panel{padding:20px 23px;margin-bottom:20px}.section-head{display:flex;justify-content:space-between;gap:15px;align-items:center;margin-bottom:13px}.section-title{font-weight:650;font-size:13px;display:flex;gap:8px;align-items:center;margin:0}.section-title svg{color:var(--teal);width:17px;height:17px}.input-actions{display:flex;gap:7px;align-items:center}.drop-zone{border:1px dashed #adbbaf;border-radius:8px;background:#fafcf8;display:flex;align-items:center;gap:15px;padding:20px}.drop-zone.dragging{background:#e1f2df;border-color:var(--teal)}.upload-icon{width:39px;height:39px;display:grid;place-items:center;background:#edf3e9;border:1px solid #dce6d4;border-radius:9px;color:var(--teal)}.drop-copy{flex:1;min-width:0}.drop-copy strong{font-weight:600;font-size:13px}.drop-copy p{margin:3px 0 0;font-size:11px;color:var(--muted)}.input-footer{font-size:11px;color:var(--muted);margin:11px 0 0;display:flex;gap:12px;justify-content:space-between}.source-name{overflow-wrap:anywhere}.paste-box{margin-top:14px}.paste-box label{display:block;font-size:12px;font-weight:600;margin-bottom:6px}textarea{width:100%;height:145px;resize:vertical;border:1px solid #c8d6cc;border-radius:7px;padding:12px;font-family:var(--mono);font-size:12px;color:var(--ink);background:#fcfdfb}.paste-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:8px;font-size:11px;color:var(--muted)}.notice{border-radius:7px;padding:11px 14px;margin-bottom:18px;background:#e8f3e5;color:#305338;border:1px solid #d1e2c9;font-size:12px;overflow-wrap:anywhere}.notice.error{background:#fff0eb;color:#933e30;border-color:#f1cbbd}progress{width:100%;height:4px;margin-top:13px;accent-color:var(--teal)}
+    .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}.metric{padding:17px 20px}.metric-label{font-size:11px;color:var(--muted);display:flex;align-items:center;justify-content:space-between}.metric-label svg{width:14px;height:14px}.metric-value{font-size:28px;letter-spacing:-.8px;font-weight:600;line-height:1.25;margin:9px 0 3px}.metric-sub{font-size:10px;color:var(--muted)}.metric.error-metric .metric-value{color:#b6533b}.metric.warn-metric .metric-value{color:#a47320}.results-header{padding:19px 21px 13px;display:flex;justify-content:space-between;align-items:center;gap:14px}.result-title{display:flex;align-items:center;gap:10px}.count{background:#edf2e9;color:#476d43;border-radius:5px;padding:2px 7px;font-size:10px;font-weight:600}.exports{display:flex;gap:7px}.filters{display:flex;align-items:center;gap:9px;padding:0 21px 17px}.search-wrap{flex:1;min-width:130px;position:relative}.search-wrap svg{position:absolute;left:11px;top:11px;width:15px;height:15px;color:var(--muted)}input[type=search]{width:100%;padding:9px 11px 9px 34px;border:1px solid #d2ddd4;border-radius:7px;background:#fcfdfb;font-size:12px;color:var(--ink)}select{max-width:190px;border:1px solid #d2ddd4;border-radius:7px;background:#fcfdfb;padding:9px;font-size:12px;color:var(--ink)}.table-wrap{overflow-x:auto;border-top:1px solid var(--line)}table{border-collapse:collapse;width:100%;min-width:680px;font-size:12px;text-align:left}thead{background:#f6f8f3}th{font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:#67776f;font-weight:600;padding:11px 15px;border-bottom:1px solid var(--line)}td{padding:12px 15px;border-bottom:1px solid #edf0e9;vertical-align:top}.line-col{width:69px;color:#91a096;font-family:var(--mono);font-size:10px}.time-col{width:196px;color:#64746a;font-family:var(--mono);font-size:10px;white-space:nowrap}.level-col{width:100px}.level{font-family:var(--mono);display:inline-block;border-radius:4px;padding:3px 6px;font-size:9px;line-height:1.3;font-weight:650;letter-spacing:.3px;background:#edf0ed;color:#66766c}.level-ERROR,.level-CRITICAL{color:#9f4531;background:#fcebe3}.level-WARN{color:#926116;background:#fff3d6}.level-INFO{color:#176e58;background:#e6f3e9}.level-DEBUG,.level-TRACE{color:#616e8b;background:#ecf0f7}.message-button{font-family:var(--mono);font-size:11px;border:0;padding:0;background:none;text-align:left;color:#30473d;max-width:100%;width:100%;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.6}.message-button:hover{text-decoration:underline;text-underline-offset:3px;color:var(--teal)}.message-cell{max-width:620px}.entry-meta{display:block;font-size:9px;color:#87948b;margin-top:4px;font-family:var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}tbody tr:hover{background:#fcfdf9}.empty-state{min-height:237px;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:30px}.empty-state .empty-icon{display:grid;place-items:center;border-radius:12px;background:#f0f5ec;width:48px;height:48px;margin-bottom:13px;color:#60865b}.empty-state h3{font-size:14px;font-weight:600;margin:0 0 5px}.empty-state p{color:var(--muted);font-size:12px;margin:0;max-width:420px}.table-footer{padding:12px 21px;display:flex;align-items:center;justify-content:space-between;font-size:10px;color:var(--muted);gap:12px}.pagination{display:flex;gap:8px;align-items:center}.pagination .button{padding:5px 9px;font-size:10px}.page-num{padding:0 5px;font-family:var(--mono)}.page-footer{display:flex;gap:12px;justify-content:space-between;font-size:10px;color:#7b8d7f;margin-top:17px}.sr-only{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    dialog{padding:0;border:1px solid var(--line);border-radius:12px;width:min(800px,94vw);max-height:88vh;box-shadow:0 20px 90px #123e3540;color:var(--ink)}dialog::backdrop{background:#0b242c80}dialog header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--line)}dialog h2{font-size:16px;margin:0}dialog .dialog-body{padding:20px 22px;overflow:auto;max-height:70vh}dl{display:grid;grid-template-columns:90px 1fr;gap:7px;font-size:12px;margin:0 0 18px}dt{color:var(--muted)}dd{margin:0;overflow-wrap:anywhere}dialog h3{font-size:11px;text-transform:uppercase;letter-spacing:.7px;margin-top:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-family:var(--mono);font-size:11px;line-height:1.7;background:#f5f8f2;border:1px solid var(--line);padding:13px;border-radius:7px;margin:7px 0}details{font-size:12px}summary{cursor:pointer;color:var(--muted);margin:13px 0 6px}
+    @media(min-width:1550px){.workspace{padding-top:44px}.page-heading h1{font-size:35px}.input-panel{margin-top:30px}.drop-zone{padding:26px}}
+    @media(max-width:1100px){.shell{grid-template-columns:185px 1fr}.sidebar{padding:26px 16px}.workspace{padding:25px 24px}.topbar{padding:0 24px}.page-heading h1{font-size:26px}.filters{flex-wrap:wrap}.search-wrap{min-width:210px}.message-cell{max-width:400px}.metric{padding:14px}}
+    @media(max-width:760px){.shell{display:block}.sidebar{padding:15px 20px;display:block}.sidebar>section,.sidebar-footer{display:none}.brand{font-size:17px}.topbar{height:49px;padding:0 20px}.private-badge{font-size:10px}.workspace{padding:23px 16px}.page-heading{align-items:flex-start}.page-heading h1{font-size:25px;max-width:270px}.page-heading .button{font-size:11px;padding:8px 10px}.page-heading p{font-size:12px}.page-heading .eyebrow{font-size:9px}.input-panel{padding:15px}.metrics{grid-template-columns:repeat(2,1fr);gap:10px}.metric-value{font-size:25px}.drop-zone{padding:17px 12px;gap:10px;flex-wrap:wrap}.drop-copy{min-width:160px}.drop-zone .button{margin-left:49px}.results-header{padding:16px 14px;flex-wrap:wrap}.filters{padding:0 14px 15px}.filters select{flex:1;min-width:125px;max-width:none}.search-wrap{flex-basis:100%}.input-footer,.page-footer{flex-wrap:wrap}.table-footer{padding:12px 14px;flex-wrap:wrap}.message-cell{max-width:420px}.topbar .breadcrumb{font-size:10px}.private-badge svg{width:12px;height:12px}}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar" aria-label="About LogSearch">
+      <div class="brand"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m8 5-5 7 5 7M16 5l5 7-5 7M14 4l-4 16"/></svg></span>LogSearch<span style="color:#a6d5a0">.</span></div>
+      <section><div class="eyebrow">Workspace</div><div class="active-nav"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 5h16M4 12h10M4 19h7"/><circle cx="18" cy="17" r="3"/><path d="m20 19 2 2"/></svg>Log explorer</div></section>
+      <section><div class="eyebrow">A clearer path to answers</div><ol class="steps"><li><span class="step-number">1</span>Add your log files</li><li><span class="step-number">2</span>Find the relevant events</li><li><span class="step-number">3</span>Export what matters</li></ol></section>
+      <div class="sidebar-footer"><div class="tiny-label"><span class="dot"></span>Processed in your browser</div><p>No log upload endpoint.<br>No saved session history.</p></div>
+    </aside>
+    <main class="main">
+      <div class="topbar"><div class="breadcrumb"><span>Tools</span><span>/</span><strong>Log explorer</strong></div><div class="private-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m12 3 8 3v6c0 4-8 9-8 9S4 16 4 12V6Z"/><path d="m8 12 3 3 5-6"/></svg>Browser processing</div></div>
+      <div class="workspace">
+        <header class="page-heading"><div><div class="eyebrow">Less noise. More answers.</div><h1>Find the signal in your logs.</h1><p>Search, inspect, and export the events that matter.</p></div><button id="sampleButton" class="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m9 5 10 7-10 7Z"/></svg>Load sample</button></header>
+        <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+        <section class="card input-panel" aria-labelledby="inputHeading">
+          <div class="section-head"><h2 class="section-title" id="inputHeading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M14 3H5v18h14V8Z"/><path d="M14 3v5h5M8 12h8M8 16h6"/></svg>Log sources</h2><div class="input-actions"><button id="pasteToggle" class="button quiet" aria-expanded="false" aria-controls="pasteBox">Paste text</button><button id="clearButton" class="button quiet" disabled>Clear logs</button></div></div>
+          <div class="drop-zone" id="dropZone"><span class="upload-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 16V3m-5 5 5-5 5 5M4 15v6h16v-6"/></svg></span><div class="drop-copy"><strong>Drop your logs here, or choose files</strong><p>Text, JSON Lines, and web access logs · 20 MB total · up to 12 files</p></div><button id="browseButton" class="button">Choose files</button><input id="fileInput" type="file" multiple accept=".log,.txt,.out,.jsonl,.ndjson,.json,text/plain,application/json" hidden></div>
+          <div class="paste-box" id="pasteBox" hidden><label for="pasteInput">Paste your log text</label><textarea id="pasteInput" spellcheck="false" placeholder="2026-11-06T09:41:12Z INFO gateway Request completed"></textarea><div class="paste-controls"><span>Parsing replaces the current session.</span><button id="parseButton" class="button primary">Parse text</button></div></div>
+          <div class="input-footer"><span class="source-name" id="sourceSummary">No files loaded. Try the sample to explore.</span><span>UTF-8 text · Auto-detected formats</span></div><progress id="parseProgress" max="100" value="0" aria-label="Parsing progress" hidden></progress>
+        </section>
+        <section class="metrics" aria-label="Session statistics">
+          <div class="card metric"><div class="metric-label">Total events<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 5h16M4 12h16M4 19h10"/></svg></div><div class="metric-value" id="totalMetric">0</div><div class="metric-sub">Across all loaded sources</div></div>
+          <div class="card metric error-metric"><div class="metric-label">Errors &amp; critical<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v6m0 3v1"/></svg></div><div class="metric-value" id="errorMetric">0</div><div class="metric-sub">Including HTTP 5xx responses</div></div>
+          <div class="card metric warn-metric"><div class="metric-label">Warnings<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m12 3 10 18H2Z M12 9v5m0 3v1"/></svg></div><div class="metric-value" id="warnMetric">0</div><div class="metric-sub">Including HTTP 4xx responses</div></div>
+          <div class="card metric"><div class="metric-label">Matching events<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="10" cy="10" r="6"/><path d="m15 15 5 5"/></svg></div><div class="metric-value" id="matchMetric">0</div><div class="metric-sub" id="matchSub">Ready when you are</div></div>
+        </section>
+        <section class="card" aria-labelledby="eventsHeading">
+          <header class="results-header"><div class="result-title"><h2 class="section-title" id="eventsHeading">Event explorer</h2><span class="count" id="resultCount">0 events</span></div><div class="exports"><button id="csvButton" class="button" disabled>Export CSV</button><button id="jsonButton" class="button" disabled>Export JSON</button></div></header>
+          <div class="filters"><div class="search-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="10" cy="10" r="6"/><path d="m15 15 5 5"/></svg><label class="sr-only" for="searchInput">Search log text</label><input type="search" id="searchInput" placeholder="Search messages, IDs, paths…" autocomplete="off"></div><label class="sr-only" for="levelFilter">Filter by severity</label><select id="levelFilter"><option value="">All levels</option value="CRITICAL">Critical</option><option value="ERROR">Error</option><option value="WARN">Warning</option><option value="INFO">Info</option><option value="DEBUG">Debug</option><option value="TRACE">Trace</option><option value="UNKNOWN">Unknown</option></select><label class="sr-only" for="sourceFilter">Filter by source file</label><select id="sourceFilter"><option value="">All sources</option></select><button id="resetButton" class="button quiet">Reset filters</button></div>
+          <div class="table-wrap" id="tableWrap" hidden><table><caption class="sr-only">Log events. Select a message to inspect its full details and raw text.</caption><thead><tr><th class="line-col" scope="col">Line</th><th class="time-col" scope="col">Timestamp</th><th class="level-col" scope="col">Level</th><th scope="col">Message</th></tr></thead><tbody id="eventRows"></tbody></table></div>
+          <div class="empty-state" id="emptyState"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M14 3H5v18h14V8Z M14 3v5h5M8 12h8M8 16h5"/></svg></div><h3 id="emptyTitle">Your next answer starts with a log.</h3><p id="emptyCopy">Choose files, paste some text, or load the sample. Your events will appear here.</p></div>
+          <footer class="table-footer"><span id="rangeLabel" aria-live="polite">No events to display</span><div class="pagination"><button id="previousButton" class="button" disabled aria-label="Previous page">Previous</button><span class="page-num" id="pageLabel">0 / 0</span><button id="nextButton" class="button" disabled aria-label="Next page">Next</button></div></footer>
+        </section>
+        <footer class="page-footer"><span>JSON Lines · Timestamped text · Apache / Nginx access logs · Plain text</span><span>Select any message for full details.</span></footer>
+      </div>
+    </main>
+  </div>
+  <dialog id="eventDialog" aria-labelledby="dialogTitle"><header><h2 id="dialogTitle">Event details</h2><button id="closeDialog" class="button quiet">Close</button></header><div class="dialog-body"><dl id="eventMetadata"></dl><h3>Message</h3><pre id="eventMessage"></pre><details id="fieldsDisclosure"><summary>Structured fields</summary><pre id="eventFields"></pre></details><h3 id="rawHeading">Original event</h3><pre id="eventRaw" tabindex="0"></pre></div></dialog>
+  <script id="parser-core">
+    // This factory is self-contained so the same parser runs in a worker and in tests.
+    function createLogParser() {
+      const MAX_BYTES = 20 * 1024 * 1024;
+      const MAX_EVENTS = 100000;
+      const MAX_LINES = 200000;
+      const levelPattern = '(?:CRITICAL|FATAL|EMERGENCY|ALERT|ERROR|WARNING|WARN|INFO|INFORMATION|DEBUG|TRACE|ERR|SEVERE)';
+      const isoPattern = /^\[?(\d{4}-\d{2}-\d{2}[T ][0-2]\d:[0-5]\d:[0-5]\d(?:[.,]\d+)?(?:Z|[+-]\d{2}:?\d{2})?)\]?\s*/;
+      const levelRegex = new RegExp('^\\s*(?:\\[|\\()?(' + levelPattern + ')(?:\\]|\\))?(?:\\s*[:|\\-]\\s*|\\s+|$)', 'i');
+      const pythonRegex = new RegExp('^(.{0,160}?)\\s{1,8}-\\s{1,8}(' + levelPattern + ')\\s{1,8}-\\s{1,8}(.*)$', 'i');
+      const syslogRegex = new RegExp('^([A-Z][a-z]{2}\\s+\\d{1,2}\\s+\\d{2}:\\d{2}:\\d{2})\\s+(\\S+)\\s+([^:]+):\\s*(.*)$');
+      const accessRegex = /^(\S+)\s+\S+\s+\S+\s+\[([^\]]+)\]\s+"(\S+)\s+(.*?)\s+(HTTP\/[^"\s]+)"\s+(\d{3})\s+(\d+|-)(?:\s|$)/;
+      const continuationRegex = /^(?:\s+|Traceback \(most recent call last\):|Caused by:|During handling of the above exception|The above exception was the direct cause|[\w.]+(?:Error|Exception)(?::|$)|\.\.\. \d+ more)/;
+      function stringValue(value) { return typeof value === 'string' ? value : JSON.stringify(value) ?? ''; }
+      function pick(record, keys) {
+        for (const key of keys) {
+          const value = Object.prototype.hasOwnProperty.call(record, key) ? record[key] : key.split('.').reduce((v,k) => v && typeof v === 'object' ? v[k] : undefined, record);
+          if (value !== undefined && value !== null) return value;
+        }
+        return undefined;
+      }
+      function level(value) {
+        if (typeof value === 'number') return value >= 60 ? 'CRITICAL' : value >= 50 ? 'ERROR' : value >= 40 ? 'WARN' : value >= 30 ? 'INFO' : value >= 20 ? 'DEBUG' : 'TRACE';
+        const text = String(value ?? '').toUpperCase();
+        const aliases = {WARNING:'WARN',ERR:'ERROR',FATAL:'CRITICAL',EMERGENCY:'CRITICAL',ALERT:'CRITICAL',SEVERE:'ERROR',INFORMATION:'INFO'};
+        return aliases[text] || (['CRITICAL','ERROR','WARN','INFO','DEBUG','TRACE'].includes(text) ? text : 'UNKNOWN');
+      }
+      function timestamp(value) {
+        if (typeof value === 'number') {
+          const d = new Date(value < 1e11 ? value * 1000 : value);
+          return Number.isNaN(d.getTime()) ? String(value) : d.toISOString();
+        }
+        return value === undefined ? '' : stringValue(value);
+      }
+      function jsonEvent(record, raw) {
+        const message = pick(record, ['message','msg','log.message','event.message','text','log']);
+        return {timestamp:timestamp(pick(record,['@timestamp','timestamp','time','datetime','date','ts'])),level:level(pick(record,['level','severity','log.level','loglevel','levelname'])),logger:stringValue(pick(record,['logger.name','logger','name','service.name','service','component']) ?? ''),message:message === undefined ? raw : stringValue(message),format:'json',fields:record,raw};
+      }
+      function parseLine(raw) {
+        const trimmed = raw.trim();
+        if (trimmed.startsWith('{')) {
+          try { const record = JSON.parse(trimmed); if (record && !Array.isArray(record) && typeof record === 'object') return jsonEvent(record,raw); } catch (_) { /* Preserve malformed JSON as text. */ }
+        }
+        const access = raw.match(accessRegex);
+        if (access) {
+          const status = Number(access[6]);
+          return {timestamp:access[2],level:status >= 500 ? 'ERROR' : status >= 400 ? 'WARN' : 'INFO',logger:'',message:access[3]+' '+access[4]+' → '+status,format:'access',fields:{client_ip:access[1],method:access[3],path:access[4],protocol:access[5],status,bytes:access[7] === '-' ? null : Number(access[7])},raw};
+        }
+        const iso = raw.match(isoPattern);
+        let rest = iso ? raw.slice(iso[0].length) : raw;
+        let severity = 'UNKNOWN', logger = '', recognized = Boolean(iso);
+        const leadingLevel = rest.match(levelRegex);
+        const python = !leadingLevel && rest.match(pythonRegex);
+        if (leadingLevel) {severity = level(leadingLevel[1]); rest = rest.slice(leadingLevel[0].length); recognized = true;}
+        else if (python) {logger = python[1].trim(); severity = level(python[2]); rest = python[3]; recognized = true;}
+        if (!iso && !recognized) {
+          const syslog = raw.match(syslogRegex);
+          if (syslog) {
+            const foundLevel = syslog[4].match(levelRegex);
+            return {timestamp:syslog[1],level:foundLevel ? level(foundLevel[1]) : 'UNKNOWN',logger:syslog[2]+' / '+syslog[3],message:foundLevel ? syslog[4].slice(foundLevel[0].length) : syslog[4],format:'syslog',fields:{host:syslog[2]},raw};
+          }
+        }
+        return {timestamp:iso ? iso[1] : '',level:severity,logger,message:rest || raw,format:recognized ? 'text' : 'plain',fields:{},raw};
+      }
+      async function parseSources(sources, progress = () => {}, yieldNow = () => Promise.resolve()) {
+        const entries = [];
+        let totalLines = 0, blankLines = 0;
+        if (sources.length > 12) throw new Error('Choose no more than 12 files at once.');
+        const byteLength = sources.reduce((sum,s) => sum + new TextEncoder().encode(s.text).byteLength,0);
+        if (byteLength > MAX_BYTES) throw new Error('The combined input exceeds 20 MB. Split it into smaller files.');
+        for (let sourceIndex = 0; sourceIndex < sources.length; sourceIndex++) {
+          const source = sources[sourceIndex];
+          const text = source.text.replace(/^\uFEFF/,'');
+          if (text.includes('\u0000')) throw new Error('Input contains binary data. Choose a UTF-8 text log.');
+          const trimmed = text.trim();
+          let jsonArray = null;
+          if (trimmed.startsWith('[')) {
+            try { const parsed = JSON.parse(trimmed); if (Array.isArray(parsed)) jsonArray = parsed; } catch (_) { /* A bracketed text log is not a JSON array. */ }
+          }
+          const sourceId = String(sourceIndex);
+          if (jsonArray) {
+            if (entries.length + jsonArray.length > MAX_EVENTS) throw new Error('The input exceeds 100,000 events. Split it into smaller files.');
+            for (let i = 0; i < jsonArray.length; i++) {
+              const value = jsonArray[i];
+              if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('A JSON array must contain log objects only.');
+              entries.push({...jsonEvent(value,JSON.stringify(value)),id:entries.length,source:source.name,sourceId,lineStart:null,lineEnd:null,record:i+1});
+              if (i % 1000 === 0) {progress(Math.round(100*(sourceIndex+(i+1)/Math.max(1,jsonArray.length))/sources.length)); await yieldNow();}
+            }
+            totalLines += text ? text.split(/\r\n|\n|\r/).length : 0;
+            if (totalLines > MAX_LINES) throw new Error('The input exceeds 200,000 lines. Split it into smaller files.');
+            continue;
+          }
+          const lines = text.split(/\r\n|\n|\r/);
+          if (lines[lines.length-1] === '') lines.pop();
+          totalLines += lines.length;
+          if (totalLines > MAX_LINES) throw new Error('The input exceeds 200,000 lines. Split it into smaller files.');
+          let previous = null;
+          for (let i = 0; i < lines.length; i++) {
+            const raw = lines[i];
+            if (!raw.trim()) {blankLines++; continue;}
+            const entry = parseLine(raw);
+            if (entry.format === 'plain' && previous && previous.format !== 'json' && continuationRegex.test(raw)) {
+              previous.message += '\n'+raw;
+              previous.raw += '\n'+raw;
+              previous.lineEnd = i+1;
+            } else {
+              previous = {...entry,id:entries.length,source:source.name,sourceId,lineStart:i+1,lineEnd:i+1,record:null};
+              entries.push(previous);
+            }
+            if (entries.length > MAX_EVENTS) throw new Error('The input exceeds 100,000 events. Split it into smaller files.');
+            if (i % 1000 === 0) {progress(Math.round(100*(sourceIndex+(i+1)/Math.max(1,lines.length))/sources.length)); await yieldNow();}
+          }
+        }
+        progress(100);
+        return {entries,totalLines,blankLines,sources:sources.map((s,i) => ({id:String(i),name:s.name}))};
+      }
+      function filterEntries(entries, {query='',severity='',source=''} = {}) {
+        const needle = query.toLocaleLowerCase();
+        return entries.filter(e => (!severity || e.level === severity) && (!source || e.sourceId === source) && (!needle || [e.raw,e.source,e.logger,e.timestamp,e.level].some(v => v.toLocaleLowerCase().includes(needle))));
+      }
+      function csvCell(value) {
+        let text = String(value ?? '');
+        // CSVs are often opened in spreadsheets: guard against formula execution.
+        if (/^[\s\uFEFF]*[=+@-]|^[\t\r\n]/.test(text)) text = "'"+text;
+        return '"'+text.replace(/"/g,'""')+'"';
+      }
+      function toCsv(entries) {
+        const columns = ['source','lineStart','lineEnd','record','timestamp','level','logger','message','raw'];
+        return columns.map(csvCell).join(',')+'\r\n'+entries.map(e => columns.map(k=>csvCell(e[k])).join(',')).join('\r\n');
+      }
+      return {parseSources,parseLine,filterEntries,toCsv,MAX_BYTES,MAX_EVENTS,MAX_LINES};
+    }
+  </script>
+  <script id="app-ui">
+    (() => {
+      'use strict';
+      const parser = createLogParser();
+      const $ = id => document.getElementById(id);
+      const state = {entries:[],filtered:[],sources:[],page:0,busy:false,worker:null,run:0,focusTarget:null};
+      const PAGE_SIZE = 100;
+      const fmt = number => number.toLocaleString();
+      const sample = [
+        '2026-11-06T09:41:00.120Z INFO gateway Service started on port 8080',
+        '{"timestamp":"2026-11-06T09:41:01.031Z","level":"info","service":"api","message":"GET /health completed","status":200,"duration_ms":3}',
+        '2026-11-06T09:41:03.451Z INFO auth Session created request_id=req_demo_701',
+        '2026-11-06T09:41:07.812Z WARN cache Cache miss rate above threshold: 24%',
+        '2026-11-06T09:41:08.122Z DEBUG cache Rebuilding product index',
+        '192.0.2.10 - - [06/Nov/2026:09:41:10 +0000] "GET /api/orders HTTP/1.1" 200 1834 "-" "DemoClient/1.0"',
+        '2026-11-06T09:41:12.083Z ERROR database Connection timed out after 5000ms',
+        'Traceback (most recent call last):',
+        '  File "orders.py", line 42, in load_orders',
+        '    return database.connect()',
+        'TimeoutError: Connection timeout',
+        '{"timestamp":"2026-11-06T09:41:12.101Z","level":"error","service":"api","message":"Request failed","request_id":"req_demo_702","error":{"type":"TimeoutError","retryable":true}}',
+        '192.0.2.11 - - [06/Nov/2026:09:41:13 +0000] "GET /api/orders HTTP/1.1" 503 219',
+        '2026-11-06T09:41:14.340Z WARN retry Scheduling database retry (attempt 1 of 3)',
+        '2026-11-06T09:41:16.051Z INFO database Connection restored',
+        '{"timestamp":"2026-11-06T09:41:17.022Z","level":30,"service":"api","message":"Retry completed successfully","request_id":"req_demo_702","duration_ms":902}',
+        '192.0.2.12 - - [06/Nov/2026:09:41:20 +0000] "GET /missing HTTP/1.1" 404 83',
+        '2026-11-06T09:41:21.550Z DEBUG metrics Published 18 counters',
+        '2026-11-06T09:41:25.603Z INFO gateway All services healthy',
+        'operator note: deployment smoke check complete'
+      ].join('\n');
+      function notice(message, error = false) { $('notice').textContent = message; $('notice').classList.toggle('error',error); $('notice').hidden = !message; }
+      function setBusy(value) {
+        state.busy = value;
+        for (const id of ['sampleButton','browseButton','parseButton','pasteToggle','clearButton']) $(id).disabled = value || (id === 'clearButton' && !state.entries.length);
+        $('parseProgress').hidden = !value;
+        $('inputHeading').textContent = value ? 'Reading your logs…' : 'Log sources';
+      }
+      function resetFilters() { $('searchInput').value=''; $('levelFilter').value=''; $('sourceFilter').value=''; state.page=0; applyFilters(); }
+      function applyFilters() {
+        state.filtered = parser.filterEntries(state.entries,{query:$('searchInput').value,severity:$('levelFilter').value,source:$('sourceFilter').value});
+        state.page = Math.min(state.page,Math.max(0,Math.ceil(state.filtered.length/PAGE_SIZE)-1));
+        $('matchMetric').textContent=fmt(state.filtered.length);
+        $('matchSub').textContent=state.entries.length ? Math.round(100*state.filtered.length/state.entries.length)+'% of this session' : 'Ready when you are';
+        $('resultCount').textContent=fmt(state.filtered.length)+(state.filtered.length===1?' event':' events');
+        $('csvButton').disabled=!state.filtered.length; $('jsonButton').disabled=!state.filtered.length;
+        renderRows();
+      }
+      function lineLabel(entry) {return entry.record ? '#'+entry.record : entry.lineStart===entry.lineEnd ? String(entry.lineStart) : entry.lineStart+'–'+entry.lineEnd;}
+      function renderRows() {
+        const fragment=document.createDocumentFragment();
+        for (const entry of state.filtered.slice(state.page*PAGE_SIZE,(state.page+1)*PAGE_SIZE)) {
+          const row=document.createElement('tr');
+          const line=document.createElement('td');line.className='line-col';line.textContent=lineLabel(entry);row.append(line);
+          const time=document.createElement('td');time.className='time-col';time.textContent=entry.timestamp||'—';row.append(time);
+          const severity=document.createElement('td');severity.className='level-col';const badge=document.createElement('span');badge.className='level level-'+entry.level;badge.textContent=entry.level;severity.append(badge);row.append(severity);
+          const message=document.createElement('td');message.className='message-cell';const button=document.createElement('button');button.type='button';button.className='message-button';button.textContent=entry.message.split('\n')[0];button.setAttribute('aria-label','Inspect event '+lineLabel(entry)+' in '+entry.source+': '+entry.message.slice(0,160));button.addEventListener('click',()=>showDetails(entry,button));message.append(button);
+          const meta=document.createElement('span');meta.className='entry-meta';meta.textContent=entry.source+(entry.logger?' · '+entry.logger:'')+(entry.lineStart!==entry.lineEnd && entry.lineStart!==null?' · multiline':'')+(entry.format==='plain'?' · unstructured':'');message.append(meta);row.append(message);fragment.append(row);
+        }
+        $('eventRows').replaceChildren(fragment);
+        $('tableWrap').hidden=!state.filtered.length; $('emptyState').hidden=Boolean(state.filtered.length);
+        $('emptyTitle').textContent=state.entries.length?'No events match these filters.':'Your next answer starts with a log.';
+        $('emptyCopy').textContent=state.entries.length?'Try a different search term, level, or source file.':'Choose files, paste some text, or load the sample. Your events will appear here.';
+        const pages=Math.ceil(state.filtered.length/PAGE_SIZE);
+        $('rangeLabel').textContent=state.filtered.length?'Showing '+fmt(state.page*PAGE_SIZE+1)+'–'+fmt(Math.min((state.page+1)*PAGE_SIZE,state.filtered.length))+' of '+fmt(state.filtered.length)+' events':'No events to display';
+        $('pageLabel').textContent=(pages?state.page+1:0)+' / '+pages;
+        $('previousButton').disabled=state.page===0; $('nextButton').disabled=state.page+1>=pages;
+      }
+      function showDetails(entry,button) {
+        state.focusTarget=button;
+        const fragment=document.createDocumentFragment();
+        for (const [name,value] of [['Source',entry.source],[entry.record?'Record':'Lines',lineLabel(entry)],['Timestamp',entry.timestamp||'Not detected'],['Level',entry.level],['Logger',entry.logger||'Not detected'],['Format',entry.format]]) {const dt=document.createElement('dt');const dd=document.createElement('dd');dt.textContent=name;dd.textContent=value;fragment.append(dt,dd);}
+        $('eventMetadata').replaceChildren(fragment);$('eventMessage').textContent=entry.message;$('eventRaw').textContent=entry.raw;$('rawHeading').textContent=entry.record?'Event JSON (normalized)':'Original event';$('eventFields').textContent=JSON.stringify(entry.fields,null,2);$('fieldsDisclosure').hidden=!Object.keys(entry.fields).length;$('fieldsDisclosure').open=false;
+        $('eventDialog').showModal();
+      }
+      async function runParser(sources) {
+        if (state.busy) return;
+        const run=++state.run; setBusy(true);notice('');$('parseProgress').value=0;
+        try {
+          let result;
+          const onProgress=value=>{$('parseProgress').value=value;};
+          if (typeof Worker !== 'undefined') {
+            try {
+              result=await new Promise((resolve,reject)=>{
+                const workerSource='const parser=('+createLogParser.toString()+')();self.onmessage=async({data})=>{try{const result=await parser.parseSources(data,value=>self.postMessage({progress:value}));self.postMessage({result});}catch(error){self.postMessage({error:error.message});}};';
+                const url=URL.createObjectURL(new Blob([workerSource],{type:'text/javascript'}));
+                try {state.worker=new Worker(url);} finally {URL.revokeObjectURL(url);}
+                state.worker.onmessage=event=>{if ('progress' in event.data) onProgress(event.data.progress);else if (event.data.error) reject(new Error(event.data.error));else resolve(event.data.result);};
+                state.worker.onerror=()=>reject(Object.assign(new Error('Worker unavailable'),{workerUnavailable:true}));
+                state.worker.postMessage(sources);
+              });
+            } catch (error) {
+              if (!error.workerUnavailable && !['SecurityError','NotSupportedError'].includes(error.name)) throw error;
+              if(state.worker) {state.worker.terminate();state.worker=null;}
+              result=await parser.parseSources(sources,onProgress,()=>new Promise(resolve=>setTimeout(resolve,0)));
+            }
+          } else result=await parser.parseSources(sources,onProgress,()=>new Promise(resolve=>setTimeout(resolve,0)));
+          if (run!==state.run) return;
+          state.entries=result.entries;state.sources=result.sources;state.page=0;
+          $('sourceFilter').replaceChildren(new Option('All sources',''),...result.sources.map(s=>new Option(s.name,s.id)));
+          $('sourceSummary').textContent=sources.map(s=>s.name).join(' · ')+' · '+fmt(result.totalLines)+' input lines';
+          $('totalMetric').textContent=fmt(state.entries.length);$('errorMetric').textContent=fmt(state.entries.filter(e=>e.level==='ERROR'||e.level==='CRITICAL').length);$('warnMetric').textContent=fmt(state.entries.filter(e=>e.level==='WARN').length);resetFilters();
+          const plain=state.entries.filter(e=>e.format==='plain').length;
+          notice(state.entries.length?fmt(state.entries.length)+' events loaded.'+(plain?' '+fmt(plain)+' unstructured events kept as text.':'')+(result.blankLines?' '+fmt(result.blankLines)+' blank lines skipped.':''):'No events found. Add a non-empty log file or paste log text.');
+        } catch (error) {notice(error.message||'Could not parse this input. Try a UTF-8 text log.',true);}
+        finally {if(state.worker){state.worker.terminate();state.worker=null;}setBusy(false);}
+      }
+      async function loadFiles(fileList) {
+        if (state.busy || !fileList.length) return;
+        const files=Array.from(fileList);
+        if(files.length>12){notice('Choose no more than 12 files at once.',true);return;}
+        if(files.reduce((sum,f)=>sum+f.size,0)>parser.MAX_BYTES){notice('The combined input exceeds 20 MB. Split it into smaller files.',true);return;}
+        setBusy(true);notice('');
+        try {
+          const sources=[];
+          for(const file of files){const buffer=await file.arrayBuffer();let text;try{text=new TextDecoder('utf-8',{fatal:true}).decode(buffer);}catch(_){throw new Error('A selected file is not UTF-8. Convert it to UTF-8 and try again.');}sources.push({name:file.name,text});}
+          setBusy(false);await runParser(sources);
+        }catch(error){setBusy(false);notice(error.message,true);}
+        finally{$('fileInput').value='';}
+      }
+      function download(format) {
+        if(!state.filtered.length)return;
+        const data=format==='csv'?'\uFEFF'+parser.toCsv(state.filtered):JSON.stringify(state.filtered,null,2);
+        const blob=new Blob([data],{type:format==='csv'?'text/csv;charset=utf-8':'application/json;charset=utf-8'});
+        const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='logsearch-'+new Date().toISOString().replace(/[:.]/g,'-')+'.'+format;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+        notice('Exported '+fmt(state.filtered.length)+' matching events as '+format.toUpperCase()+'.');
+      }
+      $('browseButton').addEventListener('click',()=>$('fileInput').click());$('fileInput').addEventListener('change',event=>loadFiles(event.target.files));
+      $('pasteToggle').addEventListener('click',()=>{const open=$('pasteBox').hidden;$('pasteBox').hidden=!open;$('pasteToggle').setAttribute('aria-expanded',String(open));if(open)$('pasteInput').focus();});
+      $('parseButton').addEventListener('click',()=>runParser([{name:'pasted.log',text:$('pasteInput').value}]));$('sampleButton').addEventListener('click',()=>runParser([{name:'sample.log',text:sample}]));
+      $('clearButton').addEventListener('click',()=>{state.entries=[];state.sources=[];state.page=0;state.focusTarget=null;$('eventDialog').close();$('eventMetadata').replaceChildren();for(const id of ['eventMessage','eventRaw','eventFields'])$(id).textContent='';$('pasteInput').value='';$('fileInput').value='';$('sourceFilter').replaceChildren(new Option('All sources',''));$('sourceSummary').textContent='No files loaded. Try the sample to explore.';for(const id of ['totalMetric','errorMetric','warnMetric'])$(id).textContent='0';notice('');setBusy(false);resetFilters();});
+      let searchTimer; $('searchInput').addEventListener('input',()=>{clearTimeout(searchTimer);searchTimer=setTimeout(()=>{state.page=0;applyFilters();},120);});
+      for(const id of ['levelFilter','sourceFilter'])$(id).addEventListener('change',()=>{state.page=0;applyFilters();});$('resetButton').addEventListener('click',resetFilters);
+      $('csvButton').addEventListener('click',()=>{clearTimeout(searchTimer);applyFilters();download('csv');});$('jsonButton').addEventListener('click',()=>{clearTimeout(searchTimer);applyFilters();download('json');});
+      $('previousButton').addEventListener('click',()=>{if(state.page>0){state.page--;renderRows();}});$('nextButton').addEventListener('click',()=>{if((state.page+1)*PAGE_SIZE<state.filtered.length){state.page++;renderRows();}});
+      $('closeDialog').addEventListener('click',()=>$('eventDialog').close());$('eventDialog').addEventListener('close',()=>{if(state.focusTarget?.isConnected)state.focusTarget.focus();state.focusTarget=null;});
+      for(const event of ['dragover','dragenter'])$('dropZone').addEventListener(event,e=>{e.preventDefault();if(!state.busy)$('dropZone').classList.add('dragging');});
+      $('dropZone').addEventListener('dragleave',()=>$('dropZone').classList.remove('dragging'));$('dropZone').addEventListener('drop',e=>{e.preventDefault();$('dropZone').classList.remove('dragging');if(!state.busy)loadFiles(e.dataTransfer.files);});
+      window.addEventListener('dragover',e=>e.preventDefault());window.addEventListener('drop',e=>e.preventDefault());
+    })();
+  </script>
+</body>
+</html>
